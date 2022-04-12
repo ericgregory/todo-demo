@@ -1,0 +1,45 @@
+services:
+  todo-app:
+    image: todo-app
+    hostname: todo-app
+    networks:
+      - todo-net
+    expose: 
+      - "3001"
+    ports: 
+      - "3001:3001"
+    volumes: 
+      - ./todo-app:/usr/src/app
+    working_dir: /usr/src/app
+    command: node index.js
+  todo-client:
+    image: todo-client
+    hostname: todo-client
+    networks:
+      - todo-net
+    expose:
+      - "3000"
+    ports: 
+      - "3000:3000"
+    volumes: 
+      - ./todo-client:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm start
+  todo_mysql:
+    image: todo-mysql
+    hostname: todo-mysql
+    networks:
+      - todo-net
+    restart: always
+    volumes:
+      - todo-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: octoberfest
+volumes:
+  todo-data:
+    external: true
+    name: todo-data
+networks:
+  todo-net:
+    external: true
+    name: todo-net
